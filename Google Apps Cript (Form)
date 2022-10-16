@@ -1,0 +1,20 @@
+// Create form to collect info
+function form() {
+  var form = SpreadsheetApp.openById('1L6j_hPabrNKDGGepuuLAfvqGLmBe6BNFZ3xMp5v_Oso').getSheetByName('Form');
+  var database = SpreadsheetApp.openById('1L6j_hPabrNKDGGepuuLAfvqGLmBe6BNFZ3xMp5v_Oso').getSheetByName('Database');
+
+  var name = form.getRange('D3').getValue();
+  var dateOfbirth = form.getRange('D5').getValue();
+  var age = form.getRange('D7').getValue();
+  var profession = form.getRange('D9').getValue();
+  var address = form.getRange('D11').getValue();
+
+  if (name !== '' && dateOfbirth !=='' && age !== '' && profession !== '' && address !== ''){
+    database.appendRow([name,dateOfbirth,age,profession,address]);
+    form.getRange('D3').clearContent();
+    form.getRange('D5').clearContent();
+    form.getRange('D7').clearContent();
+    form.getRange('D9').clearContent();
+    form.getRange('D11').clearContent();
+  }
+}
