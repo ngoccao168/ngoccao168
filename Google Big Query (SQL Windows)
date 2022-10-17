@@ -1,0 +1,10 @@
+--pivot SQL
+WITH temp AS (
+            SELECT EXTRACT(YEAR FROM Order_Date) as year, EXTRACT (QUARTER FROM Order_Date) as quarter, COUNT(DISTINCT Order_ID) as         Total_order
+            FROM `earnest-episode-365113.superstore.superstore2`
+            GROUP BY year, quarter)
+SELECT * FROM temp
+PIVOT (SUM (Total_order) FOR quarter IN (1,2,3,4)
+) as pivot
+
+--"PARTITION BY" SQL
