@@ -6,5 +6,3 @@ WITH temp AS (
 SELECT * FROM temp
 PIVOT (SUM (Total_order) FOR quarter IN (1,2,3,4)
 ) as pivot
-
---"PARTITION BY" SQL
