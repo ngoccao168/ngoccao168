@@ -1,0 +1,35 @@
+--total_submissions, total_accepted_submissions, total_views, and total_unique_views
+WITH view_ AS (
+                SELECT  challenge_id,
+                        SUM (total_views) AS total_views,
+                        SUM (total_unique_views) AS total_unique_views
+                FROM View_Stats
+                GROUP BY challenge_id),                 
+            
+    sub AS (
+                SELECT  challenge_id,
+                        SUM (total_submissions) AS total_submissions,
+                        SUM (total_accepted_submissions) AS total_accepted_submissions
+                FROM Submission_Stats
+                GROUP BY challenge_id)       
+                
+SELECT  con.contest_id,
+        con.hacker_id,
+        con.name,
+        SUM (sub.total_submissions),
+        SUM (sub.total_accepted_submissions),
+        SUM (view_.total_views),
+        SUM (view_.total_unique_views)
+FROM Contests con
+JOIN Colleges col ON con.contest_id = col.contest_id
+JOIN Challenges cha ON col.college_id = cha.college_id
+LEFT JOIN view_ ON cha.challenge_id = view_.challenge_id
+LEFT JOIN sub ON cha.challenge_id = sub.challenge_id
+
+GROUP BY con.contest_id, con.hacker_id, con.name
+HAVING (SUM (view_.total_views) + SUM (view_.total_unique_views) + SUM (sub.total_submissions) + SUM (sub.total_accepted_submissions)) >0
+ORDER BY con.contest_id
+        
+            
+       
+
