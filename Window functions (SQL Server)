@@ -1,0 +1,12 @@
+/*Given a table with event logs, find the percentage of users that had at least 
+one seven-day streak of visiting the same URL.*/ 
+
+WITH temp AS (
+				SELECT	*, 
+						MIN(Created_at) OVER (PARTITION BY User_id, URL ORDER BY User_id, Created_at, URL) min_time, 
+						DATEDIFF(day, MIN(Created_at) OVER (PARTITION BY User_id, URL ORDER BY User_id, Created_at, URL),Created_at) diff_time
+				FROM url) -- CTE để tạo cột phụ tính thời gian giữa thời gian của session đầu tiên và thời gian của session hiện tại phân cụm theo User_id, URL
+
+SELECT COUNT (DISTINCT User_id) / CAST((SELECT COUNT (DISTINCT User_id) FROM url) AS FLOAT)
+FROM temp
+WHERE diff_time >0 AND diff_time <= 7 -- đếm user nếu cột diff_time từ 0-7
